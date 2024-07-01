@@ -6,23 +6,21 @@ import { Progress } from "@/components/progress";
 import { useRouter } from "next/navigation";
 
 import { PasswordBackupScreen } from "@/components/password/passwordBackupScreen";
-import { getWalletStatus, setWalletStatus } from "@/mpc/storage/wallet";
 import { WALLET_STATUS } from "@/constants";
-import { isPasswordReady } from "@/mpc/storage/account";
 import { RouteLoader } from "@/components/routeLoader";
 import { layoutClassName } from "@/utils/ui";
-
-
+import { getPairingStatus, setPairingStatus } from "@/storage/localStorage";
+import { useMpcAuth } from "@/hooks/useMpcAuth";
 
 function Page() {
     const router = useRouter();
-    
+    const mpcAuth = useMpcAuth();
     const moveToNext = () => {
-        setWalletStatus(WALLET_STATUS.BackedUp);
+        setPairingStatus(WALLET_STATUS.BackedUp);
         router.replace("/afterBackup");
     };
-    const status = getWalletStatus();
-    if (status !== WALLET_STATUS.Paired || isPasswordReady()) {
+    const status = getPairingStatus();
+    if (status !== WALLET_STATUS.Paired || mpcAuth.accountManager.isPasswordReady()) {
         return <RouteLoader />;
     }
     return (

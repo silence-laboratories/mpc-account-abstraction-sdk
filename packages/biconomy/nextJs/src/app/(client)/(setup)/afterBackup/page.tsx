@@ -14,15 +14,18 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
-import { getDeviceOS, getWalletStatus } from "@/mpc/storage/wallet";
 import { WALLET_STATUS } from "@/constants";
 import { RouteLoader } from "@/components/routeLoader";
 import { layoutClassName } from "@/utils/ui";
+import { getPairingStatus } from "@/storage/localStorage";
+import { useMpcAuth } from "@/hooks/useMpcAuth";
+
 
 function Page() {
     const router = useRouter();
-    const deviceOS = getDeviceOS();
-    const status = getWalletStatus();
+    const mpcAuth = useMpcAuth();
+    const deviceOS = mpcAuth.getDeviceOS();
+    const status = getPairingStatus();
     if (status !== WALLET_STATUS.BackedUp) {
         return <RouteLoader />;
     }

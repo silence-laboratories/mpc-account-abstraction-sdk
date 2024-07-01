@@ -7,10 +7,7 @@ import prettier from "prettier";
 import chalk from "chalk";
 import { ChainId } from "@biconomy/core-types";
 import { RPC_PROVIDER_URLS } from "@biconomy/common";
-import { SilentWallet } from "../silentWallet";
-import { config } from 'dotenv';
-
-config();
+import { generate } from "../mpc";
 
 const API_KEY = process.env.API_KEY;
 if (!API_KEY) {
@@ -32,7 +29,7 @@ const CONFIG_PATH = path.resolve(__dirname, "../config.json");
 INIT_CONFIG.accountIndex = 0;
 
 export const init = async (chainId: string) => {
-  const silentSigner = await SilentWallet.generate();
+  const silentSigner = await generate();
   console.log(chalk.blue("network is: ", chainId));
   console.log(chalk.green("your address is: ", silentSigner.address))
   if (chainId === "sepolia") {

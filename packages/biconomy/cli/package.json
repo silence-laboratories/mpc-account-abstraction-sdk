@@ -2,22 +2,21 @@
   "name": "biconomy-sdk-cli",
   "version": "1.0.0",
   "description": "Biconomy SDK SmartAccount",
-  "main": "scripts/index.js",
   "scripts": {
     "start": "ts-node scripts/index.ts",
     "smartAccount-init": "ts-node scripts/index.ts init --network=$npm_config_network",
     "smartAccount-address": "ts-node scripts/index.ts address",
     "smartAccount-transfer": "ts-node scripts/index.ts transfer --to=$npm_config_to --amount=$npm_config_amount"
   },
-  
   "keywords": [],
   "license": "ISC",
   "dependencies": {
     "@biconomy/account": "^4.2.0",
-    "@ethereumjs/tx": "^4.1.2",
     "@biconomy/common": "^3.0.0",
     "@biconomy/core-types": "^3.0.0",
+    "@ethereumjs/tx": "^4.1.2",
     "@silencelaboratories/ecdsa-tss": "^1.1.2",
+    "@silencelaboratories/mpc-sdk": "file:../../mpc",
     "chalk": "^4.1.2",
     "dotenv": "^16.4.5",
     "ethers": "^5.7.2",
@@ -32,9 +31,10 @@
     "@types/libsodium-wrappers": "^0.7.13",
     "@types/node": "^20.3.2",
     "@types/prettier": "^2.7.3",
+    "@types/qrcode-terminal": "^0.12.2",
     "@types/uuid": "^9.0.7",
     "@types/yargs": "^17.0.24",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.1.6"
   }
 }

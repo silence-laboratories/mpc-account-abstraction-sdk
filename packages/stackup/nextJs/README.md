@@ -4,6 +4,7 @@
 ## Prerequisites:
 - Node.js v16.13.0 or higher
 - Check .env.example file and setup environment variables before running the app
+- Build MPC Authenticator library, follow instruction in [packages/mpc README](../../mpc/README.md)
 
 ## Setting Up Environment Variables
 1. Create a .env file:
@@ -11,8 +12,8 @@
 
 2. Fill in your API keys in .env:
     ``` bash
-    NEXT_PUBLIC_BASE_URL= https://us-central1-mobile-wallet-mm-snap-staging.cloudfunctions.net
-    API_KEY = your_stackup_api_key_here //update this API key using step 3 below
+    API_KEY = your_stackup_api_key_here #update this API key using step 3 below
+    NODE_ENV=development #only require for development
     ```
 3. Set the rpcUrl:
 - To set the rpcUrl, you can create an instance at app.stackup.sh. Follow these steps:

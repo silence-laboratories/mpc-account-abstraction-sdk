@@ -1,22 +1,13 @@
-import { SilentWallet } from "@/silentWallet";
-import { getSilentShareStorage } from "@/mpc/storage/wallet";
-import * as store from "@/mpc/storage/account";
 import { Presets } from "userop";
+import { MpcAuthenticator } from "@silencelaboratories/mpc-sdk";
+import { MpcSigner } from "@silencelaboratories/mpc-sdk/lib/esm/domain/signer";
 
-export async function mintWallet(eoa: { address: string; }) {
-    const keyshards = getSilentShareStorage();
-    const distributedKey = keyshards.newPairingState?.distributedKey;
-    const keyShareData = distributedKey?.keyShareData ?? null;
+export async function mintWallet(mpcAuth: MpcAuthenticator) {
     const simpleAccount = await Presets.Builder.SimpleAccount.init(
-        new SilentWallet(
-            eoa.address,
-            distributedKey?.publicKey ?? "",
-            keyShareData,
-            { distributedKey }
-        ),
+        new MpcSigner(mpcAuth),
         `https://api.stackup.sh/v1/node/${process.env.API_KEY}`
     );
     const response = simpleAccount.getSender();
-    store.setSmartContractAccount({ address: response });
+    mpcAuth.accountManager.setSmartContractAccount({ address: response });
     return response;
 }

@@ -18,6 +18,10 @@ Navigate to the cli directory within the cloned repository:
 
 **Node Version:** Ensure you are using Node.js version 18.
 
+### Build MPC Authenticator library
+
+- Follow instruction in [packages/mpc README](../../mpc/README.md)
+
 
 ### Set Up the RPC URL
 
@@ -37,10 +41,11 @@ To set up the `rpcUrl`, create an instance at:
 2. Fill in your Base urls and API keys in `.env`:
 
     - Replace `your_biconomy_api_key_here` with your actual Biconomy's API key.
+    - To run in development environment, add `NODE_ENV=development`.
 
         ```env
-        FIREBASE_BASEURL=https://us-central1-mobile-wallet-mm-snap-staging.cloudfunctions.net
         API_KEY=your_biconomy_api_key_here
+        NODE_ENV=development
         ```
 
 ### Step 3: Install Dependencies

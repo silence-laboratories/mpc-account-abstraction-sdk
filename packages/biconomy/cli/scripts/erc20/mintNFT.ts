@@ -3,22 +3,14 @@
 
 import { ethers } from "ethers";
 import chalk from "chalk";
-import {  SupportedSigner, createSmartAccountClient } from "@biconomy/account";
-import { SilentWallet } from "../../silentWallet";
-import config from "../../config.json";
+import { SupportedSigner, createSmartAccountClient } from "@biconomy/account";
+import { mpcAuth } from "../../mpc";
+import { MpcSigner } from "@silencelaboratories/mpc-sdk";
 export const mintNftPayERC20 = async () => {
-  const provider = new ethers.providers.JsonRpcProvider("https://rpc.sepolia.org");
-  const distributedKey = config.silentSigner.keygenResult.distributedKey;
-  const address = config.silentSigner.address;
-  const keyShareData = config.silentSigner.keygenResult.distributedKey.keyShareData;
-
-  const client = new SilentWallet(
-    address,
-    distributedKey?.publicKey ?? "",
-    keyShareData,
-    { distributedKey },
-    provider
+  const provider = new ethers.providers.JsonRpcProvider(
+    "https://rpc.sepolia.org"
   );
+  const client = new MpcSigner(mpcAuth, provider);
 
   const biconomySmartAccount = await createSmartAccountClient({
     signer: client as SupportedSigner,
@@ -31,12 +23,16 @@ export const mintNftPayERC20 = async () => {
   };
 
   console.log(chalk.blue("Sending transaction request..."));
-  const userOpResponse = await biconomySmartAccount.sendTransaction(requestData);
+  const userOpResponse = await biconomySmartAccount.sendTransaction(
+    requestData
+  );
 
   console.log(chalk.blue("Waiting for transaction receipt..."));
   const userOpReceipt = await userOpResponse.wait();
 
-  console.log(chalk.blue(`userOp: ${JSON.stringify(userOpReceipt, null, "\t")}`));
+  console.log(
+    chalk.blue(`userOp: ${JSON.stringify(userOpReceipt, null, "\t")}`)
+  );
 
   try {
     const { transactionHash } = await userOpResponse.waitForTxHash();

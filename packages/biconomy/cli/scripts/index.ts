@@ -10,7 +10,6 @@ import { init } from "./init";
 import { getAddress } from "./address";
 import { nativeTransferPayERC20 } from "./erc20/nativeTransfer";
 
-
 const argv = yargs(hideBin(process.argv))
   .scriptName(chalk.green("smartAccount"))
   .usage("$0 <command> [options]")

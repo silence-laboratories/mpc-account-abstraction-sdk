@@ -3,34 +3,15 @@
 
 import { ethers, providers } from "ethers";
 import chalk from "chalk";
-import {
-    SupportedSigner,
-    createSmartAccountClient,
-  } from "@biconomy/account";
+import { SupportedSigner, createSmartAccountClient } from "@biconomy/account";
+import { mpcAuth } from "../../mpc";
+import { MpcSigner } from "@silencelaboratories/mpc-sdk";
 
-import config from "../../config.json";
-import { SilentWallet } from "../../silentWallet";
-
-export const nativeTransferPayERC20 = async (
-    to: string,
-    amount: number
-  ) => {
-  // ------------------------STEP 1: Initialise Biconomy Smart Account SDK--------------------------------//  
+export const nativeTransferPayERC20 = async (to: string, amount: number) => {
+  // ------------------------STEP 1: Initialise Biconomy Smart Account SDK--------------------------------//
   try {
-  
     const provider = new providers.JsonRpcProvider("https://rpc.sepolia.org");
-    const distributedKey = config.silentSigner.keygenResult.distributedKey;
-    const address = config.silentSigner.address;
-    const keyShareData =
-      config.silentSigner.keygenResult.distributedKey.keyShareData;
-    
-    const client = new SilentWallet(
-      address,
-      config.silentSigner.public_key,
-      keyShareData,
-      { distributedKey },
-      provider
-    );
+    const client = new MpcSigner(mpcAuth, provider);
 
     const biconomySmartAccount = await createSmartAccountClient({
       signer: client as SupportedSigner,
@@ -43,25 +24,33 @@ export const nativeTransferPayERC20 = async (
     };
 
     console.log(chalk.blue("Sending transaction request..."));
-    const userOpResponse = await biconomySmartAccount.sendTransaction(requestData);
+    const userOpResponse = await biconomySmartAccount.sendTransaction(
+      requestData
+    );
 
     console.log(chalk.blue("Waiting for transaction receipt..."));
     const userOpReceipt = await userOpResponse.wait();
 
-    console.log(chalk.blue(`userOp: ${JSON.stringify(userOpReceipt, null, "\t")}`));
+    console.log(
+      chalk.blue(`userOp: ${JSON.stringify(userOpReceipt, null, "\t")}`)
+    );
 
     try {
       const { transactionHash } = await userOpResponse.waitForTxHash();
-     
+
       console.log(chalk.green(`userOp Hash: ${userOpResponse.userOpHash}`));
       const transactionDetails = await userOpResponse.wait();
       console.log(
         chalk.blue(
-          `transactionDetails: ${JSON.stringify(transactionDetails, null, "\t")}`
+          `transactionDetails: ${JSON.stringify(
+            transactionDetails,
+            null,
+            "\t"
+          )}`
         )
       );
-    console.log(chalk.yellow("Transaction Hash:", transactionHash));
-    console.log(chalk.green(`userOp Hash: ${userOpResponse.userOpHash}`));
+      console.log(chalk.yellow("Transaction Hash:", transactionHash));
+      console.log(chalk.green(`userOp Hash: ${userOpResponse.userOpHash}`));
     } catch (e) {
       console.log("Error during transaction processing: ", e);
     }
